@@ -1,0 +1,65 @@
+{
+    "name": "publishpress/publishpress-blocks",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "description": "",
+    "homepage": "https://publishpress.com/",
+    "authors": [
+        {
+            "name": "PublishPress",
+            "email": "help@publishpress.com"
+        }
+    ],
+    "config": {
+        "process-timeout": 600,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.2.5"
+    },
+    "require-dev": {
+        "automattic/vipwpcs": "^2.3",
+        "publishpress/publishpress-phpcs-standards": "dev-main",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+        "squizlabs/php_codesniffer": "^3.6",
+        "wp-cli/i18n-command": "^2.4"
+    },
+    "scripts": {
+        "build": "ppbuild build",
+        "build:dir": "ppbuild build-dir",
+        "build:clean": "ppbuild clean",
+        "build:make-pot": "wp i18n make-pot --exclude=/dev-workspace --exclude=/.wordpress-org --exclude=/.github --exclude=/dist --exclude=/vendor --exclude=/lib . ./languages/advanced-gutenberg.pot --allow-root",
+        "build:js-translations": "bash /project/dev-workspace/docker/scripts/json_translations.sh",
+        "build:css": "sass assets/scss/:assets/css/ --style=compressed --no-source-map",
+        "build:css-dev": "sass assets/scss/:assets/css/ -w",
+        "build:js-dev": "webpack --mode development --watch",
+        "build:js": "webpack --mode production",
+        "minify:js-main": "uglifyjs assets/js/main.js --output assets/js/main.min.js",
+        "minify:js-settings": "uglifyjs assets/js/settings.js --output assets/js/settings.min.js",
+        "get-version": "ppbuild version",
+        "check:longpath": "longpath .",
+        "check:lint": "phplint --no-cache",
+        "check:cs": "phpcs",
+        "fix:cs": "phpcbf --standard=.phpcs.xml",
+        "fix:php": [
+            "php-cs-fixer fix .",
+            "@fix:cs"
+        ],
+        "config:phpcs": "phpcs --config-set installed_paths \"../../phpcsstandards/phpcsutils,../../phpcsstandards/phpcsextra,../../automattic/vipwpcs,../../phpcompatibility/php-compatibility,../../sirbrillig/phpcs-variable-analysis,../../publishpress/publishpress-phpcs-standards/standards,../../wp-coding-standards/wpcs\"",
+        "pre-autoload-dump": "composer dumpautoload --working-dir=./lib",
+        "pre-update-cmd": "composer update --working-dir=./lib",
+        "pre-install-cmd": "composer install --working-dir=./lib"
+    },
+    "extra": {
+        "plugin-name": "publishpress-blocks",
+        "plugin-slug": "advanced-gutenberg",
+        "plugin-folder": "advanced-gutenberg"
+    }
+}
